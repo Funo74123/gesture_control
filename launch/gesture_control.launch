@@ -1,5 +1,6 @@
 <launch>
 
-    <node name="gesture_listener" pkg="gesture_control" type="gesture_listener" />
+    <node name="gesture_listener" pkg="gesture_control" type="gesture_listener" output="screen"/>
+    <node name="socket_communication" pkg="gesture_control" type="socket_communication" output="screen"/>
 
 </launch>

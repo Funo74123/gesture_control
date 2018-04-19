@@ -32,17 +32,13 @@ int main(int argc, char **argv)
     //get xyz coordinates
     geometry_msgs::Point coordinates_right_hand;
 
-    coordinates_right_hand.x = transform_right_hand.getOrigin().x() - transform_torso.getOrigin().x();
-    coordinates_right_hand.y = transform_right_hand.getOrigin().y() - transform_torso.getOrigin().y();
-    coordinates_right_hand.z = transform_right_hand.getOrigin().z() - transform_torso.getOrigin().z();
-
-    ROS_ERROR("x = %f", (transform_right_hand.getOrigin().x() - transform_torso.getOrigin().x()) * 1000);
-    ROS_ERROR("y = %f", (transform_right_hand.getOrigin().y() - transform_torso.getOrigin().y()) * 1000);
-    ROS_ERROR("z = %f", (transform_right_hand.getOrigin().z() - transform_torso.getOrigin().z()) * 1000);
+    coordinates_right_hand.x = (transform_right_hand.getOrigin().x() - transform_torso.getOrigin().x()) * 1000;
+    coordinates_right_hand.y = (transform_right_hand.getOrigin().y() - transform_torso.getOrigin().y()) * 1000;
+    coordinates_right_hand.z = (transform_right_hand.getOrigin().z() - transform_torso.getOrigin().z()) * 1000;
 
     //publish coordinates
     coordinates_pub.publish(coordinates_right_hand);
-    //ros::spinOnce();
+
     loop_rate.sleep();
   }
 
