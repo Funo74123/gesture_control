@@ -5,7 +5,7 @@
 #include "iostream"
 #include "sstream"
 
-#define PORT 8080
+#define PORT 7200
 
 geometry_msgs::Point coordinates;
 
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   std::ostringstream coordinates_convert;
 
   //create socket
-  if((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1){
+  if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
     ROS_ERROR("Can't create socket!");
   }
 
@@ -43,12 +43,12 @@ int main(int argc, char **argv)
   }
 
   //listen for connections
-  if(listen(sock, 2) == -1){
+  if((listen(sock, 1)) == -1){
     ROS_ERROR("Listen failed!");
   }
 
   //accept connections
-  if(new_socket = accept(sock, (struct sockaddr *)&si_me, (socklen_t*)&slength) == -1){
+  if((new_socket = accept(sock, (struct sockaddr *)&si_me, (socklen_t*)&slength)) == -1){
     ROS_ERROR("Accept failed!");
   }
 
@@ -60,23 +60,23 @@ int main(int argc, char **argv)
     ROS_INFO("z = %f", coordinates.z);
     */
 
-    /*
+
     float coord_x = 111.111111111111111;//coordinates.x;
     float coord_y = 222.222222222222222;//coordinates.y;
     float coord_z = 333.333333333333333;//coordinates.z;
-    */
 
-    float coord_x = coordinates.x;
+
+    /*float coord_x = coordinates.x;
     float coord_y = coordinates.y;
     float coord_z = coordinates.z;
-
+*/
     coordinates_convert  << coord_x << "x" << coord_y << "y" << coord_z << "z";
     coordinates_string = coordinates_convert.str();
 
-    ROS_INFO_STREAM(coordinates_string);
+    //ROS_INFO_STREAM(coordinates_string);
 
-    if(send(sock, &coordinates_string, sizeof(coordinates_string), 0) == -1){//, (struct sockaddr*) &si_other, slength) == -1){
-      ROS_ERROR("Can't send message!");
+    if((send(sock, &coordinates_string, sizeof(coordinates_string), 0)) == -1){//, (struct sockaddr*) &si_other, slength) == -1){
+     // ROS_ERROR("Can't send message!");
     }
 
     ros::spinOnce();
