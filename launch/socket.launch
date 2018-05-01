@@ -1,3 +1,5 @@
 <launch>
+
     <node name="socket_communication" pkg="gesture_control" type="socket_communication" output="screen"/>
+
 </launch>

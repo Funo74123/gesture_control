@@ -13,4 +13,5 @@ target_link_libraries(gesture_listener ${catkin_LIBRARIES})
 
 add_executable(socket_communication src/socket_communication.cpp)
 target_link_libraries(socket_communication ${catkin_LIBRARIES})
+target_compile_options(socket_communication PRIVATE -std=c++11)
 
