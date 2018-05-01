@@ -25,13 +25,11 @@ int main(int argc, char **argv)
   char coord_x[11] = {0};
   char coord_y[11] = {0};
   char coord_z[11] = {0};
-
   char coordinates_char[39] = {0};
-
-  int send_return;
   char confirm[1] = {0};
 
   struct sockaddr_in si_me;
+
   int sock, new_socket;
 
   //create socket
@@ -73,30 +71,19 @@ int main(int argc, char **argv)
     ROS_INFO("Connection accepted!");
   }
 
-  int i = 0;
-
   while(nh.ok()) {
 
-    //ROS_INFO("Creating sub strings!");
+    //Converting to sub strings
     snprintf(coord_x, sizeof(coord_x), "%11.4f", coordinates.x);
     snprintf(coord_y, sizeof(coord_y), "%11.4f", coordinates.y);
     snprintf(coord_z, sizeof(coord_z), "%11.4f", coordinates.z);
-    /*
-    float x = 300;
-    float y = -20 - i;
-    float z = 500;
 
-    snprintf(coord_x, sizeof(coord_x), "%11.4f", x);
-    snprintf(coord_y, sizeof(coord_y), "%11.4f", y);
-    snprintf(coord_z, sizeof(coord_z), "%11.4f", z);
-    */
-
-    //ROS_INFO("Creating message string!");
+    //Creating message string!
     snprintf(coordinates_char, sizeof(coordinates_char), "%sx%sy%sz", coord_x, coord_y, coord_z);
 
-    //ROS_INFO("Checking message");
+    //Checking and sending message
     if(!std::isnan(coordinates.x)  && !std::isnan(coordinates.y) && !std::isnan(coordinates.z)){
-      ROS_INFO("Message is OK! Iteracia %i", i);
+      ROS_ERROR("One or more coordinates is NAN!");
       if((send(new_socket, &coordinates_char[0], sizeof(coordinates_char), MSG_DONTWAIT)) == -1){
         ROS_ERROR("Can't send message!");
       }
@@ -109,13 +96,12 @@ int main(int argc, char **argv)
 
         recv(new_socket, &confirm, 1, 0);
         ROS_INFO("%s", confirm);
-        //ROS_INFO("Number of bytes sent: %i", sizeof(coordinates_char));
       }
     }
 
-    ROS_INFO("Spinning!");
+    //calling callbacks
     ros::spinOnce();
-    i++;
+
     loop_rate.sleep();
   }
 

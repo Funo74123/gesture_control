@@ -31,11 +31,7 @@ int main(int argc, char **argv)
 
     //get xyz coordinates
     geometry_msgs::Point coordinates_right_hand;
-/*
-    coordinates_right_hand.x = (transform_right_hand.getOrigin().x() - transform_torso.getOrigin().x()) * 1000;
-    coordinates_right_hand.y = (transform_right_hand.getOrigin().y() - transform_torso.getOrigin().y()) * 1000;
-    coordinates_right_hand.z = (transform_right_hand.getOrigin().z() - transform_torso.getOrigin().z()) * 1000;
-*/
+
     coordinates_right_hand.y = (transform_right_hand.getOrigin().x() - transform_torso.getOrigin().x()) * 1000;
     coordinates_right_hand.z = (transform_right_hand.getOrigin().y() - transform_torso.getOrigin().y()) * 1000;
     coordinates_right_hand.x = (transform_right_hand.getOrigin().z() - transform_torso.getOrigin().z()) * 1000;
