@@ -6,6 +6,7 @@
 #include "sstream"
 #include "string"
 #include "math.h"
+#include "fstream"
 
 #define PORT 7200
 
@@ -31,6 +32,20 @@ int main(int argc, char **argv)
   struct sockaddr_in si_me;
 
   int sock, new_socket;
+
+  std::ofstream x_stream;
+  std::ofstream y_stream;
+  std::ofstream z_stream;
+
+  try{
+    x_stream.open("/home/michal/Documents/DP_text/Xsur.txt");
+    y_stream.open("/home/michal/Documents/DP_text/Ysur.txt");
+    z_stream.open("/home/michal/Documents/DP_text/Zsur.txt");
+  }
+  catch(std::exception e){
+    ROS_ERROR("Can't open file!");
+  }
+
 
   //create socket
   if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
@@ -83,7 +98,11 @@ int main(int argc, char **argv)
 
     //Checking and sending message
     if(!std::isnan(coordinates.x)  && !std::isnan(coordinates.y) && !std::isnan(coordinates.z)){
-      ROS_ERROR("One or more coordinates is NAN!");
+
+      x_stream << coord_x << std::endl;
+      y_stream << coord_y << std::endl;
+      z_stream << coord_z << std::endl;
+
       if((send(new_socket, &coordinates_char[0], sizeof(coordinates_char), MSG_DONTWAIT)) == -1){
         ROS_ERROR("Can't send message!");
       }
@@ -98,6 +117,9 @@ int main(int argc, char **argv)
         ROS_INFO("%s", confirm);
       }
     }
+    else{
+      ROS_ERROR("One or more coordinates is NAN!");
+    }
 
     //calling callbacks
     ros::spinOnce();
@@ -106,5 +128,10 @@ int main(int argc, char **argv)
   }
 
   close(sock);
+
+  x_stream.close();
+  y_stream.close();
+  z_stream.close();
+
   return 0;
 }

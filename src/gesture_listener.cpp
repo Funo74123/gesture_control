@@ -3,6 +3,9 @@
 #include "std_msgs/Float64.h"
 #include "tf/transform_listener.h"
 #include "geometry_msgs/Twist.h"
+#include "iostream"
+#include "sstream"
+#include "fstream"
 
 int main(int argc, char **argv)
 {
@@ -13,7 +16,25 @@ int main(int argc, char **argv)
 
   tf::TransformListener tfListener;
 
+  std::ofstream x_stream;
+  std::ofstream y_stream;
+  std::ofstream z_stream;
+
   ros::Rate loop_rate(50);
+
+  char coord_x[11] = {0};
+  char coord_y[11] = {0};
+  char coord_z[11] = {0};
+
+  try{
+    std::cout << "robim fily" << std::endl;
+    x_stream.open("/home/michal/Documents/DP_text/Xraw.txt");
+    y_stream.open("/home/michal/Documents/DP_text/Yraw.txt");
+    z_stream.open("/home/michal/Documents/DP_text/Zraw.txt");
+  }
+  catch(std::exception e){
+    ROS_ERROR("Can't open file!");
+  }
 
   while(nh.ok()){
 
@@ -40,6 +61,14 @@ int main(int argc, char **argv)
     ROS_INFO("y = %f", coordinates_right_hand.y);
     ROS_INFO("z = %f", coordinates_right_hand.z);
     ROS_INFO("\n");
+
+    snprintf(coord_x, sizeof(coord_x), "%11.4f", coordinates_right_hand.x);
+    snprintf(coord_y, sizeof(coord_y), "%11.4f", coordinates_right_hand.y);
+    snprintf(coord_z, sizeof(coord_z), "%11.4f", coordinates_right_hand.z);
+
+    x_stream << coord_x << std::endl;
+    y_stream << coord_y << std::endl;
+    z_stream << coord_z << std::endl;
 
     //publish coordinates
     coordinates_pub.publish(coordinates_right_hand);
